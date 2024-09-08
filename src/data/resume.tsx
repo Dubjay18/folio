@@ -189,8 +189,8 @@ export const DATA = {
       technologies: ["React-native", "Typescript", "TailwindCSS", "expo"],
       links: [
         {
-          type: "Website",
-          href: "https://automatic.chat",
+          type: "Source",
+          href: "https://github.com/Dubjay18/Mov-mobile",
           icon: <Icons.globe className="size-3" />,
         },
       ],
