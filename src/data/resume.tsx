@@ -90,19 +90,19 @@ export const DATA = {
       href: "https://veenode.com/",
       badges: ["Next.js", "React-native"],
       location: "Remote",
-      title: "Frontend Engineer",
+      title: "Frontend & mobile Engineer",
       logoUrl: "/veenode_technologies_logo.jpg",
       start: "August 2022",
       end: "January 2023",
       description:
-        "Worked with the Flutipay team to build a web app for their payment platform using React, Typescript, and Tailwind CSS also worled a bit with the Telneting team.",
+        "Worked with the Flutipay team to build a web app for their payment platform using React, Typescript, and Tailwind CSS also worled a bit with the Telneting mobile team.",
     },
   ],
   education: [
     {
       school: "Obafemi Awolowo University",
       href: "https://oauife.edu.ng/",
-      degree: "Bachelor's Degree of Computer Science with Mathematices (BCS)",
+      degree: "Bachelor's Degree of Computer Science with Mathematices (BSC)",
       logoUrl: "/oau.png",
       start: "2021",
       end: "present",

@@ -45,6 +45,8 @@ export const metadata: Metadata = {
     siteName: `${DATA.name}`,
     locale: "en_US",
     type: "website",
+    images:
+      "https://opengraph.b-cdn.net/production/images/f638e0dd-82e0-4380-b9c3-df0dbb2b28bd.jpg?token=1WdkGatyQekRTHS5FfZeLTx4q5k-zkDg7nN3_RCb_4M&height=800&width=1200&expires=33261817152",
   },
   robots: {
     index: true,
@@ -60,7 +62,13 @@ export const metadata: Metadata = {
   twitter: {
     title: `${DATA.name}`,
     card: "summary_large_image",
+    description: DATA.description,
+    site: DATA.url,
+    creator: DATA.name,
+    images:
+      "https://opengraph.b-cdn.net/production/images/f638e0dd-82e0-4380-b9c3-df0dbb2b28bd.jpg?token=1WdkGatyQekRTHS5FfZeLTx4q5k-zkDg7nN3_RCb_4M&height=800&width=1200&expires=33261817152",
   },
+
   verification: {
     google: "",
     yandex: "",
