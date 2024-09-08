@@ -148,13 +148,8 @@ export const DATA = {
       technologies: ["Golang", "HTMX", "TailwindCSS", "Redis"],
       links: [
         {
-          type: "Website",
-          href: "https://magicui.design",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
           type: "Source",
-          href: "https://github.com/magicuidesign/magicui",
+          href: "https://github.com/Dubjay18/Ushort",
           icon: <Icons.github className="size-3" />,
         },
       ],
