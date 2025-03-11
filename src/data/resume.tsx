@@ -110,6 +110,29 @@ export const DATA = {
   ],
   projects: [
     {
+      title: "Treate",
+      href: "https://treate.ng/",
+      dates: "May 2024",
+      active: true,
+      description:
+        "At Treate, we harness visionary talent and cutting-edge blockchain and AI technologies to shape the future. We connect minds, coach excellence, and create solutions that tackle today's issues with tomorrow's tools. Our commitment ensures every project not only anticipates but actively shapes the future.",
+      technologies: [
+        "Framer motion",
+        "Typescript",
+        "TailwindCSS",
+        "React",
+      ],
+      links: [
+        {
+          type: "Source - web",
+          href: "https://treate.ng/",
+          icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image: "/treate.png",
+      video: "",
+    },
+    {
       title: "Telneting",
       href: "https://telneting.com/",
       dates: "May 2023",
@@ -126,7 +149,7 @@ export const DATA = {
         {
           type: "Source - web",
           href: "https://telneting.com/",
-          icon: <Icons.github className="size-3" />,
+          icon: <Icons.globe className="size-3" />,
         },
         {
           type: "Source - mobile",
