@@ -110,6 +110,34 @@ export const DATA = {
   ],
   projects: [
     {
+      title: "Telneting",
+      href: "https://telneting.com/",
+      dates: "May 2023",
+      active: true,
+      description:
+        "Telneting communication is an enterprise that strengthens the human and business end- to-end connection and communication by providing affordable internet services, automated online bills payment, a suite of voice and business and family connectivity solutions.",
+      technologies: [
+        "React-native",
+        "Typescript",
+        "TailwindCSS",
+        "React",
+      ],
+      links: [
+        {
+          type: "Source - web",
+          href: "https://telneting.com/",
+          icon: <Icons.github className="size-3" />,
+        },
+        {
+          type: "Source - mobile",
+          href: "https://play.google.com/store/apps/details?id=com.telnetingveenode.app",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/telneting.png",
+      video: "",
+    },
+    {
       title: "QRaven",
       href: "https://github.com/Dubjay18/QRaven",
       dates: "May 2024 - Present",
