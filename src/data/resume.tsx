@@ -20,6 +20,12 @@ export const DATA = {
     "Python",
     "Go",
     "Postgres",
+    "Softr",
+    "Airtable",
+    "Supabase",
+    "Hugo",
+    "AI",
+    "Bubble"
   ],
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
