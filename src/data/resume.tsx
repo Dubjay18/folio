@@ -68,6 +68,16 @@ export const DATA = {
 
   work: [
     {
+      company: "Mission Sync",
+      href: "https://mission-sync.com/",
+      badges: [],
+      location: "Remote",
+      title: "Software engineer (fullstack)",
+      logoUrl: "/msync.svg",
+      start: "April 2025",
+      end: "Present",
+    },
+    {
       company: "Shippack",
       href: "https://theshippack.com/",
       badges: [],
