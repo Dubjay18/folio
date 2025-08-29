@@ -76,6 +76,7 @@ export const DATA = {
       logoUrl: "/msync.svg",
       start: "April 2025",
       end: "Present",
+      description: "Built API used by 200+ people daily also worked on the frontend to improve user experience."
     },
     {
       company: "Shippack",
