@@ -29,7 +29,7 @@ export const DATA = {
   ],
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
-    { href: "https://dubjay.hashnode.dev", icon: NotebookIcon, label: "Blog" },
+    { href: "/blog", icon: NotebookIcon, label: "Blog" },
   ],
   contact: {
     email: "jejeniyi7@gmail.com",
@@ -51,7 +51,7 @@ export const DATA = {
       },
       X: {
         name: "X",
-        url: "https://x.com/YanfunmiJ",
+        url: "https://x.com/d_honouredOne",
         icon: Icons.x,
 
         navbar: true,
