@@ -144,7 +144,7 @@ export const PROJECTS: Project[] = [
 export const INDEX_ROWS = [
   ["Warden", "LLM gateway + observability", "Self-hosted · single binary · Next.js", "2026 · in build"],
   ["Reverie", "Agent memory + dreaming engine", "Agent-agnostic library", "2026 · in build"],
-  ["Private TM", "[TYPE]", "[STACK]", "[YEAR]"],
+  ["PrivateTM", "Private payments + prediction market", "Go · Chainlink CRE · Solidity · CCIP", "2026"],
   ["Specter", "Distributed systems", "Consistent hashing · gossip", "[YEAR]"],
   ["Sanctum", "Encrypted TUI chat", "Go · NaCl · Bubble Tea", "2026"],
 ] as const;

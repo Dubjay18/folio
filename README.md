@@ -62,7 +62,7 @@ npx -y -p playwright node scripts/build-resume.mjs
 
 ## Before launch
 
-- Replace everything in `[BRACKETS]` in `src/data/site.ts` and the case study (metrics, dates, URLs, Private TM details)
+- Replace everything in `[BRACKETS]` in `src/data/site.ts` and the case study (metrics, dates, URLs)
 - Set `NEXT_PUBLIC_FORM_ENDPOINT` in Vercel
 
 # License
