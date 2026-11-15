@@ -52,11 +52,17 @@ ffmpeg -i input.mov -an -vf "scale=1280:-2" -c:v libx264 -preset slow -crf 28 -m
 
 If a file is missing, the labelled placeholder stays visible.
 
+## Résumé
+
+`public/resume.pdf` is generated from `resume/resume.md`. After editing the markdown:
+
+```bash
+npx -y -p playwright node scripts/build-resume.mjs
+```
+
 ## Before launch
 
-- Replace everything in `[BRACKETS]` in `src/data/site.ts` and the case study (metrics, dates, URLs, Qraven/Private TM details)
-- Add `public/resume.pdf`
-- Swap the Cal.com links in `src/data/site.ts` for your real event links
+- Replace everything in `[BRACKETS]` in `src/data/site.ts` and the case study (metrics, dates, URLs, Private TM details)
 - Set `NEXT_PUBLIC_FORM_ENDPOINT` in Vercel
 
 # License

@@ -378,7 +378,6 @@ button { font: inherit; color: inherit; }
 .service p { margin: 0; color: #3c3a36; }
 .service ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: #3c3a36; }
 .service li::before { content: '+ '; }
-.service__time { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--soft); }
 
 /* -------------------------------------------------------------------
    Process

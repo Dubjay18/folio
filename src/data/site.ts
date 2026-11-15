@@ -11,8 +11,7 @@ export const SITE = {
   location: "Lagos, NG",
   email: "jejeniyi7@gmail.com",
   resume: "/resume.pdf",
-  calIntro: "https://cal.com/[YOUR-HANDLE]/30min",
-  calProject: "https://cal.com/[YOUR-HANDLE]/20min",
+  cal: "https://cal.com/dubjay/quick-chat",
   medium: "https://medium.com/@jejeniyi7",
   mediumFeed: "https://medium.com/feed/@jejeniyi7",
 } as const;
@@ -63,7 +62,7 @@ export const STATS = [
   { text: "1 day", label: "Reply time, guaranteed" },
 ] as const;
 
-export const CLIENTS = ["Grupp", "Sovalabs", "Flyrank", "Throughline", "Gearsparks", "Cleverfolks", "Shippack"];
+export const CLIENTS = ["Grupp", "Sovalabs", "Throughline", "Gearsparks", "Cleverfolks", "Shippack"];
 
 type MediaKind =
   | { kind: "browser"; url: string; video: string; webm?: string; placeholder: string }
@@ -133,12 +132,12 @@ export const PROJECTS: Project[] = [
   {
     n: "005",
     name: "Qraven",
-    tags: ["Web"],
+    tags: ["Backend"],
     status: "Shipped",
-    blurb: "[ONE-LINE DESCRIPTION OF QRAVEN: the problem and who it is for]",
-    stack: "PostgreSQL · backend services",
+    blurb: "An event platform backend: auth with role-based access, event management, ticket issuance and payments wired to the ticket lifecycle.",
+    stack: "Go · Gin · PostgreSQL · Redis · Docker",
     videoLabel: "Qraven in use",
-    media: { kind: "browser", url: "[qraven URL]", video: "/videos/qraven-loop.mp4", placeholder: "[ qraven-loop.mp4 · 16:10 ]" },
+    media: { kind: "browser", url: "github.com/Dubjay18/QRaven", video: "/videos/qraven-loop.mp4", placeholder: "[ qraven-loop.mp4 · 16:10 ]" },
   },
 ];
 
@@ -147,8 +146,7 @@ export const INDEX_ROWS = [
   ["Reverie", "Agent memory + dreaming engine", "Agent-agnostic library", "2026 · in build"],
   ["Private TM", "[TYPE]", "[STACK]", "[YEAR]"],
   ["Specter", "Distributed systems", "Consistent hashing · gossip", "[YEAR]"],
-  ["Lantern", "Consensus dashboard", "SSE · Ethereum Beacon API", "[YEAR]"],
-  ["Sanctum", "Encrypted TUI chat", "NaCl · terminal UI", "[YEAR]"],
+  ["Sanctum", "Encrypted TUI chat", "Go · NaCl · Bubble Tea", "2026"],
 ] as const;
 
 export const TRACE_ROWS = [
@@ -165,25 +163,21 @@ export const SERVICES = [
     title: "Web app, end to end",
     body: "Product-grade web apps: interface, API, database, auth, payments, deployment.",
     items: ["Next.js / TypeScript frontends", "APIs, Postgres, queues", "Deploy + monitoring"],
-    time: "Typically [N] to [N] weeks",
   },
   {
     title: "Mobile app",
     body: "Cross-platform apps with native modules where the platform demands it.",
     items: ["React Native + TypeScript", "Native modules (Kotlin)", "Store-ready builds"],
-    time: "Typically [N] to [N] weeks",
   },
   {
     title: "AI agents & LLM features",
     body: "Agents and AI features that survive real users: tools, retrieval, evals and observability.",
     items: ["Agents, RAG, MCP tools", "Evals + cost/latency budgets", "LLM gateway + tracing"],
-    time: "Typically [N] to [N] weeks",
   },
   {
     title: "Embedded engineer",
     body: "Join your team for a sprint or a quarter, async-first, in your tools.",
     items: ["Your repo, your standups", "Weekly written + video update", "Pause any month"],
-    time: "Monthly",
   },
 ];
 
@@ -200,7 +194,6 @@ export const SKILLS = [
 ];
 
 export const TIMELINE = [
-  { co: "Flyrank", date: "[DATES]", role: "Backend AI Engineer (intern): LLM gateways, agent orchestration, container isolation", tag: "AI infra" },
   { co: "Grupp", date: "Jul 2026 to Present", role: "Software Engineer: banking + BaaS platforms, consumer apps", tag: "Fintech" },
   { co: "Sovalabs", date: "Mar 2026 to Present", role: "Backend Engineer: loan repayment module, double-entry ledger", tag: "Fintech" },
   { co: "Gearsparks Consulting", date: "Dec 2025 to Feb 2026", role: "Forward-Deployed Engineer: React/TypeScript, REST + GraphQL", tag: "Consulting" },
@@ -211,5 +204,4 @@ export const TIMELINE = [
 ];
 
 export const NEEDS = ["Web app", "Mobile app", "AI agent / LLM feature", "Ongoing engineer"];
-export const BUDGETS = ["[RANGE 1]", "[RANGE 2]", "[RANGE 3]", "Not sure yet"];
 export const TIMELINES = ["ASAP", "1 to 3 months", "Exploring"];

@@ -1,6 +1,6 @@
 "use client";
 
-import { BUDGETS, NEEDS, SITE, TIMELINES } from "@/data/site";
+import { NEEDS, SITE, TIMELINES } from "@/data/site";
 import { useState, type FormEvent } from "react";
 import { Arrow, Roll } from "./roll";
 
@@ -29,7 +29,6 @@ export function ContactForm() {
       name: field("name"),
       email: field("email"),
       message: field("message"),
-      budget: field("budget"),
       timeline: field("timeline"),
       needs: needs.join(", "),
     };
@@ -39,7 +38,6 @@ export function ContactForm() {
         `Name: ${payload.name}`,
         `Email: ${payload.email}`,
         `I need: ${payload.needs || "-"}`,
-        `Budget: ${payload.budget}`,
         `Timeline: ${payload.timeline}`,
         "",
         payload.message,
@@ -96,15 +94,7 @@ export function ContactForm() {
           required
         />
       </div>
-      <div className="field">
-        <label htmlFor="f-budget">Budget</label>
-        <select id="f-budget" name="budget">
-          {BUDGETS.map((b) => (
-            <option key={b}>{b}</option>
-          ))}
-        </select>
-      </div>
-      <div className="field">
+      <div className="field field--full">
         <label htmlFor="f-when">Timeline</label>
         <select id="f-when" name="timeline">
           {TIMELINES.map((t) => (

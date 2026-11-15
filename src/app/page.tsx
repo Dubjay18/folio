@@ -409,7 +409,6 @@ export default async function Page() {
                     <li key={it}>{it}</li>
                   ))}
                 </ul>
-                <span className="mono service__time">{s.time}</span>
               </article>
             ))}
           </div>
@@ -465,8 +464,8 @@ export default async function Page() {
                   PDF
                 </span>
               </a>
-              <a className="btn btn--line" href={SITE.calIntro} data-magnetic>
-                <Roll>Book a 30-min intro</Roll> <Arrow />
+              <a className="btn btn--line" href={SITE.cal} data-magnetic>
+                <Roll>Book an intro call</Roll> <Arrow />
               </a>
             </div>
             <p className="label" style={{ margin: 0 }}>
@@ -535,8 +534,8 @@ export default async function Page() {
               sometimes with a rough plan.
             </p>
             <div className="contact__links" data-reveal>
-              <a href={SITE.calProject} style={{ fontWeight: 700, textDecoration: "underline", textUnderlineOffset: 4 }}>
-                Book a free 20-min project call →
+              <a href={SITE.cal} style={{ fontWeight: 700, textDecoration: "underline", textUnderlineOffset: 4 }}>
+                Book a free project call →
               </a>
               <button type="button" className="copy" data-copy={SITE.email}>
                 or email {SITE.email}&#160;<span data-copy-label>(click to copy)</span>
