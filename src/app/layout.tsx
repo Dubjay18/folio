@@ -1,99 +1,57 @@
-import Navbar from "@/components/navbar";
-import { ThemeProvider } from "@/components/theme-provider";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { DATA } from "@/data/resume";
-import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
+import { SITE } from "@/data/site";
+import "@fontsource-variable/hubot-sans/wdth.css";
+import "@fontsource-variable/mona-sans/wdth.css";
+import "@fontsource-variable/newsreader/opsz-italic.css";
+import "@fontsource/monaspace-neon/400.css";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
 export const metadata: Metadata = {
-  metadataBase: new URL(DATA.url),
-  title: {
-    default: DATA.name,
-    template: `%s | ${DATA.name}`,
+  metadataBase: new URL(SITE.url),
+  title: { default: SITE.title, template: `%s | ${SITE.name}` },
+  description: SITE.description,
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/favicon/favicon-32x32.png", sizes: "32x32" }],
+    apple: "/favicon/apple-touch-icon.png",
   },
-  icons: [
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "32x32",
-      url: "/favicon/favicon-32x32.png",
-    },
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "16x16",
-      url: "/favicon/favicon-16x16.png",
-    },
-    {
-      rel: "apple-touch-icon",
-      sizes: "180x180",
-      url: "/favicon/apple-touch-icon.png",
-    },
-  ],
-  description: DATA.description,
   openGraph: {
-    title: `${DATA.name}'s portfolio`,
-    description: DATA.description,
-    url: DATA.url,
-    siteName: `${DATA.name}`,
+    title: SITE.title,
+    description: SITE.description,
+    url: SITE.url,
+    siteName: SITE.name,
     locale: "en_US",
     type: "website",
-    images:
-      "https://opengraph.b-cdn.net/production/images/f638e0dd-82e0-4380-b9c3-df0dbb2b28bd.jpg?token=1WdkGatyQekRTHS5FfZeLTx4q5k-zkDg7nN3_RCb_4M&height=800&width=1200&expires=33261817152",
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  twitter: {
-    title: `${DATA.name}`,
-    card: "summary_large_image",
-    description: DATA.description,
-    site: DATA.url,
-    creator: DATA.name,
-    images:
-      "https://opengraph.b-cdn.net/production/images/f638e0dd-82e0-4380-b9c3-df0dbb2b28bd.jpg?token=1WdkGatyQekRTHS5FfZeLTx4q5k-zkDg7nN3_RCb_4M&height=800&width=1200&expires=33261817152",
-  },
-
-  verification: {
-    google: "",
-    yandex: "",
-  },
+  twitter: { card: "summary_large_image", title: SITE.title, description: SITE.description },
+  robots: { index: true, follow: true },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = {
+  themeColor: "#0C0C0B",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
+// Runs before paint: hides motion start states only when motion will run,
+// and falls back to static content if the motion layer never boots.
+const bootScript = `(function(){var d=document.documentElement;if(!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('js');setTimeout(function(){if(!window.__motion)d.classList.remove('js');},3000);}})();`;
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased max-w-2xl mx-auto py-12 sm:py-24 px-6",
-          fontSans.variable
-        )}
-      >
-        <ThemeProvider attribute="class" defaultTheme="light">
-          <TooltipProvider delayDuration={0}>
-            {children}
-            <Navbar />
-          </TooltipProvider>
-        </ThemeProvider>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: bootScript }} />
+      </head>
+      <body>
+        <a className="skip" href="#main">
+          Skip to content
+        </a>
+        <div className="progress" aria-hidden="true" />
+        <div className="cursor" aria-hidden="true">
+          <span />
+        </div>
+        {children}
       </body>
     </html>
   );

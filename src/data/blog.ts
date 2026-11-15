@@ -7,19 +7,13 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import Parser from "rss-parser";
+import { SITE } from "./site";
 
 type Metadata = {
   title: string;
   publishedAt: string;
   summary: string;
   image?: string;
-};
-
-type MediumPost = {
-  title: string;
-  link: string;
-  pubDate: string;
-  contentSnippet: string;
 };
 
 function getMDXFiles(dir: string) {
@@ -32,10 +26,7 @@ export async function markdownToHTML(markdown: string) {
     .use(remarkRehype)
     .use(rehypePrettyCode, {
       // https://rehype-pretty.pages.dev/#usage
-      theme: {
-        light: "min-light",
-        dark: "min-dark",
-      },
+      theme: "min-dark",
       keepBackground: false,
     })
     .use(rehypeStringify)
@@ -46,6 +37,7 @@ export async function markdownToHTML(markdown: string) {
 
 export async function getPost(slug: string) {
   const filePath = path.join("content", `${slug}.mdx`);
+  if (!/^[\w-]+$/.test(slug) || !fs.existsSync(filePath)) return null;
   let source = fs.readFileSync(filePath, "utf-8");
   const { content: rawContent, data: metadata } = matter(source);
   const content = await markdownToHTML(rawContent);
@@ -56,12 +48,13 @@ export async function getPost(slug: string) {
   };
 }
 
-async function getAllPosts(dir: string) {
+export async function getAllPosts(dir = "content") {
   let mdxFiles = getMDXFiles(dir);
   return Promise.all(
     mdxFiles.map(async (file) => {
       let slug = path.basename(file, path.extname(file));
-      let { metadata, source } = await getPost(slug);
+      const post = await getPost(slug);
+      const { metadata, source } = post!;
       return {
         metadata,
         slug,
@@ -78,7 +71,7 @@ export async function getBlogPosts() {
         item: ['content:encoded'],
       },
     });
-    const feed = await parser.parseURL('https://medium.com/feed/@jejeniyi7');
+    const feed = await parser.parseURL(SITE.mediumFeed);
     return feed.items.map((item: any) => {
       // Extract image from content:encoded
       const content = item['content:encoded'] || '';
