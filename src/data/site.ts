@@ -7,7 +7,7 @@ export const SITE = {
   title: "Jay | Software & Applied AI Engineer",
   description:
     "Jay is an independent software and applied AI engineer building web apps, mobile apps and AI agents, end to end. Open to contracts and full-time roles.",
-  url: "https://jayfolio.vercel.app",
+  url: "https://jayfolio.dev",
   location: "Lagos, NG",
   email: "jejeniyi7@gmail.com",
   resume: "/resume.pdf",
