@@ -37,10 +37,11 @@ Without it, submitting opens the visitor's email app with the enquiry pre-filled
 
 ## Showreel
 
-The hero showreel (`public/videos/showreel-*`) is generated, not filmed: `showreel/index.html` animates the site's real
-components frame by frame, `showreel/music.py` synthesises the soundtrack (120 BPM, A minor), and `showreel/build.sh`
-renders and encodes everything. Made with the [/brag](https://github.com/latent-spaces/brag) workflow; `showreel/plan.md`
-is the storyboard.
+The hero showreel (`public/videos/showreel-*`) is generated, not filmed: `showreel/index.html` puts the real products
+(live sites of Grupp, WorkSage, Throughline and ShipPack, plus Reelstack, QRaven and Zush screens from their repos,
+all in `showreel/img`) into browser and phone frames and animates them frame by frame. `showreel/music.py` synthesises
+the soundtrack and `showreel/build.sh` renders and encodes everything. Made with the
+[/brag](https://github.com/latent-spaces/brag) workflow; `showreel/plan.md` is the storyboard.
 
 ```bash
 ./showreel/build.sh

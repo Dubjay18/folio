@@ -2,330 +2,259 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet" href="fonts/hubot-sans/wdth.css">
-<link rel="stylesheet" href="fonts/mona-sans/wdth.css">
-<link rel="stylesheet" href="fonts/newsreader/opsz-italic.css">
-<link rel="stylesheet" href="fonts/monaspace-neon/400.css">
-<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="fonts/inter/wght.css">
+<link rel="stylesheet" href="fonts/instrument-serif/400-italic.css">
 <style>
-  /* Frames are a pure function of t: no CSS-driven motion. */
-  *, *::before, *::after { transition: none !important; animation: none !important; }
-  html, body { width: 1920px; height: 1080px; overflow: hidden; margin: 0; background: var(--ink); }
-  .scene { position: absolute; inset: 0; display: none; background: var(--ink); overflow: hidden; }
-  .stage { position: absolute; inset: 0; padding: 0 160px; display: flex; flex-direction: column; justify-content: center; }
+  *, *::before, *::after { box-sizing: border-box; transition: none !important; animation: none !important; }
+  html, body { width: 1920px; height: 1080px; margin: 0; overflow: hidden; background: #F4F2ED; }
+  body { font-family: 'Inter Variable', system-ui, sans-serif; color: #111; -webkit-font-smoothing: antialiased; }
+  .serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+  .scene { position: absolute; inset: 0; display: none; overflow: hidden; }
+  .shade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 50; }
 
-  /* 1 hero */
-  #s1 .hero__meta { width: 100%; }
-  #s1 h1 { font-size: 218px; line-height: 0.86; margin: 44px 0 0; }
+  /* device frames */
+  .browser { position: absolute; border-radius: 18px; background: #fff; overflow: hidden;
+    box-shadow: 0 2px 0 rgba(0,0,0,.04), 0 40px 90px -20px rgba(20,20,40,.35), 0 0 0 1px rgba(0,0,0,.06); }
+  .browser .bar { height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 18px; background: #F7F7F5; border-bottom: 1px solid #E6E4DF; }
+  .browser .bar i { width: 12px; height: 12px; border-radius: 99px; background: #DAD7D0; }
+  .browser .bar i:nth-child(1) { background: #FF5F57; } .browser .bar i:nth-child(2) { background: #FEBC2E; } .browser .bar i:nth-child(3) { background: #28C840; }
+  .browser .url { margin-left: 18px; flex: 1; max-width: 460px; height: 28px; border-radius: 8px; background: #EDEBE6; font-size: 14px; color: #555; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .browser .url::before { content: ''; width: 9px; height: 11px; border: 2px solid #888; border-radius: 2px; border-top-width: 5px; }
+  .browser .view { position: absolute; left: 0; right: 0; top: 44px; bottom: 0; overflow: hidden; background: #fff; }
+  .browser .view img { position: absolute; left: 0; top: 0; width: 100%; display: block; }
+  .phone { position: absolute; border-radius: 54px; background: #0B0B0C; padding: 13px;
+    box-shadow: 0 50px 90px -24px rgba(20,20,40,.45), inset 0 0 0 2px #2A2A2D; }
+  .phone .view { position: relative; width: 100%; height: 100%; border-radius: 42px; overflow: hidden; background: #fff; }
+  .phone .view img { position: absolute; left: 0; top: 0; width: 100%; display: block; }
+  .phone .view::after { content: ''; position: absolute; top: 10px; left: 50%; width: 96px; height: 28px; margin-left: -48px; border-radius: 20px; background: #0B0B0C; }
 
-  /* 2 cards */
-  #s2 .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 30px; }
-  #s2 .card { background: var(--panel); }
-  #s2 .proj__media { aspect-ratio: auto; height: 430px; }
-  #s2 .proj__title { font-size: 68px; }
-  #s2 .proj__stack { font-size: 14px; }
-  .chat { flex: 1; padding: 22px; display: flex; flex-direction: column; gap: 12px; font-size: 17px; }
-  .bubble { align-self: flex-end; background: var(--volt); color: var(--ink); border-radius: 16px 16px 4px 16px; padding: 10px 16px; font-weight: 600; }
-  .tool { font-family: var(--f-mono); font-size: 14px; color: var(--ash); display: flex; gap: 10px; }
-  .tool b { color: var(--paper); font-weight: 400; }
-  .tool .ok { color: var(--volt); margin-left: auto; }
-  .riley { font-family: var(--f-mono); font-size: 12px; text-transform: uppercase; color: var(--volt); }
-  #s2 .phone { height: 100%; }
-  .dw { height: 100%; background: #0e0e0d; display: flex; flex-direction: column; align-items: center; padding: 26px 14px; gap: 14px; }
-  .dw .label { font-size: 10px; }
-  .ring { width: 156px; height: 156px; }
-  .dw__time { font-family: var(--f-disp); font-weight: 800; font-stretch: 75%; font-size: 36px; line-height: 1; margin-top: -112px; height: 70px; }
-  .dw__apps { width: 100%; display: flex; flex-direction: column; gap: 6px; margin-top: 18px; }
-  .dw__app { display: flex; justify-content: space-between; gap: 8px; white-space: nowrap; font-family: var(--f-mono); font-size: 11px; color: var(--soft); border: 1px solid var(--line-2); border-radius: 8px; padding: 7px 9px; }
-  .dw__app span:last-child { color: var(--volt); }
-  #s2 .term { font-size: 17px; line-height: 2; }
+  /* company scenes */
+  .copy { position: absolute; left: 110px; top: 0; bottom: 0; width: 540px; display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+  .eyebrow { display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 500; color: #555; }
+  .eyebrow b { width: 12px; height: 12px; border-radius: 99px; background: var(--brand); }
+  .name { font-size: 92px; font-weight: 750; letter-spacing: -0.045em; line-height: 0.95; margin: 0; }
+  .tag { font-size: 52px; line-height: 1.05; margin: 0; color: #222; }
+  .role { align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 999px; background: #fff; font-size: 20px; font-weight: 550;
+    box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 10px 30px -12px rgba(0,0,0,.25); }
+  .role::before { content: ''; width: 9px; height: 9px; border-radius: 99px; background: var(--brand); }
+  .when { font-size: 18px; color: #666; font-weight: 500; }
 
-  /* 3 trace */
-  #s3 .split2 { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-  #s3 h2 { font-size: 168px; margin: 18px 0 0; }
-  #s3 .trace figcaption { font-size: 15px; }
-  #s3 .steps-trace { font-size: 21px; padding: 10px 0; }
-  #s3 .steps-trace li { padding: 16px 24px; grid-template-columns: 44px minmax(0, 1fr) auto; }
+  /* hook */
+  #hook .copy { width: 900px; }
+  #hook h1 { margin: 0; font-size: 132px; line-height: 0.98; font-weight: 750; letter-spacing: -0.05em; }
+  #hook h1 .serif { font-size: 1.08em; font-weight: 400; letter-spacing: -0.02em; }
+  .line { display: block; overflow: hidden; padding-bottom: 0.08em; }
+  .line > span { display: inline-block; }
+  .mini { width: 640px; height: 420px; }
 
-  /* 4 index */
-  #s4 .index { margin-top: 26px; }
-  #s4 .index table { font-size: 20px; }
-  #s4 .index td { padding: 15px 12px 15px 0; }
-  #s4 .index td:first-child { font-size: 50px; width: 520px; }
-  #s4 .index td:nth-child(3) { font-size: 16px; }
-  #s4 h2 { font-size: 110px; margin: 14px 0 0; }
+  /* own builds */
+  #own .head { position: absolute; left: 120px; top: 92px; font-size: 64px; font-weight: 750; letter-spacing: -0.04em; margin: 0; }
+  #own .head .serif { font-weight: 400; font-size: 1.1em; }
+  .cap { position: absolute; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+  .cap span { display: block; font-weight: 450; color: #666; font-size: 17px; margin-top: 4px; }
 
-  /* 5 shipped with */
-  #s5 .names { display: grid; grid-template-columns: repeat(3, max-content); justify-content: space-between; gap: 18px 40px; margin-top: 40px; }
-  #s5 .co { font-family: var(--f-disp); font-weight: 800; text-transform: uppercase; font-size: 92px; line-height: 1; white-space: nowrap; display: flex; align-items: center; gap: 22px; }
-  #s5 .co::before { content: ''; flex: none; width: 16px; height: 16px; border-radius: 99px; background: var(--volt); }
-  #s5 .label.big { font-size: 22px; }
-
-  /* 6 outro */
-  #s6 { background: var(--volt); color: var(--ink); }
-  #s6 .contact__title { font-size: 250px; line-height: 0.84; }
-  #s6 .foot { display: flex; align-items: center; gap: 26px; margin-top: 64px; }
-  #s6 .foot .domain { font-family: var(--f-disp); font-weight: 800; font-stretch: 100%; text-transform: uppercase; font-size: 46px; }
-  #s6 .foot .label { color: #2a2a27; font-size: 18px; margin-left: auto; }
+  /* outro */
+  #outro { background: #111; color: #F4F2ED; }
+  #outro .mosaic { position: absolute; inset: -200px; display: grid; grid-template-columns: repeat(5, 520px); gap: 28px; transform: rotate(-8deg); opacity: .16; }
+  #outro .mosaic img { width: 520px; height: 330px; object-fit: cover; object-position: top; border-radius: 14px; }
+  #outro .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 18px; }
+  #outro h2 { margin: 0; font-size: 230px; font-weight: 800; letter-spacing: -0.06em; line-height: 0.9; }
+  #outro .sub { font-size: 60px; color: #E8E4DA; }
+  #outro .pill { margin-top: 26px; padding: 18px 34px; border-radius: 999px; background: #F4F2ED; color: #111; font-size: 34px; font-weight: 650; letter-spacing: -0.02em; }
+  #outro .small { font-size: 20px; color: #A8A49B; font-weight: 500; letter-spacing: .02em; }
 </style>
 </head>
 <body>
 
-<!-- 1. Hook: hero headline -->
-<section class="scene" id="s1"><div class="stage">
-  <div class="hero__meta label" style="font-size:18px" data-fade>
-    <span>Jay / Software &amp; Applied AI Engineer</span><span>Showreel 2026</span><span>Lagos, NG</span>
+<!-- HOOK -->
+<section class="scene" id="hook" style="background:#F4F2ED">
+  <div class="copy">
+    <div class="eyebrow" style="--brand:#111" data-in><b></b>Jay · Software &amp; applied AI engineer</div>
+    <h1><span class="line"><span>In production,</span></span><span class="line"><span class="serif">not in a demo.</span></span></h1>
   </div>
-  <h1 class="disp hero__title">
-    <span class="line"><span>I build web apps,</span></span>
-    <span class="line"><span>mobile apps <span class="serif hero__amp">&amp;</span></span></span>
-    <span class="line"><span class="accent">AI agents.</span></span>
-  </h1>
-</div></section>
+  <div class="browser mini" data-fan style="left:1080px;top:150px"><div class="bar"><i></i><i></i><i></i></div><div class="view"><img src="img/trygrupp-d.jpg"></div></div>
+  <div class="browser mini" data-fan style="left:1180px;top:250px"><div class="bar"><i></i><i></i><i></i></div><div class="view"><img src="img/worksage-d.jpg"></div></div>
+  <div class="browser mini" data-fan style="left:1080px;top:380px"><div class="bar"><i></i><i></i><i></i></div><div class="view"><img src="img/throughline-d.jpg"></div></div>
+  <div class="browser mini" data-fan style="left:1180px;top:500px"><div class="bar"><i></i><i></i><i></i></div><div class="view"><img src="img/theshippack-d.jpg"></div></div>
+</section>
 
-<!-- 2. Reveal: three surfaces -->
-<section class="scene" id="s2"><div class="stage">
-  <span class="label" style="font-size:18px">Selected work / 3 surfaces</span>
-  <div class="row">
-    <article class="card proj">
-      <div class="proj__media" data-clip>
-        <div class="browser media-inner">
-          <div class="browser__bar"><i></i><i></i><i></i><span>reelstack</span></div>
-          <div class="chat">
-            <div class="bubble" data-pop="0">something like Severance but funnier</div>
-            <span class="riley" data-pop="1">Riley</span>
-            <div class="tool" data-pop="2"><span>›</span><b>parse_intent</b>tone: comedy<span class="ok">✓</span></div>
-            <div class="tool" data-pop="3"><span>›</span><b>get_history</b>your watchlist<span class="ok">✓</span></div>
-            <div class="tool" data-pop="4"><span>›</span><b>friends_lists</b>overlapping picks<span class="ok">✓</span></div>
-            <div class="tool" data-pop="5"><span>›</span><b>rank + reply</b>add in one tap<span class="ok">✓</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="proj__body">
-        <div class="tagrow"><span>001</span><span>/</span><span class="accent">Web</span><span>+</span><span class="accent">Agent</span><span class="end">Live</span></div>
-        <h3 class="disp proj__title" data-stretch>Reelstack</h3>
-        <p class="proj__stack">Next.js · Postgres · Redis · MCP</p>
-      </div>
-    </article>
-    <article class="card proj">
-      <div class="proj__media" data-clip>
-        <div class="phone media-inner">
-          <div class="dw">
-            <span class="label">Deep work session</span>
-            <svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="#2e2e2a" stroke-width="6"/><circle id="ring" cx="50" cy="50" r="44" fill="none" stroke="#D2F53C" stroke-width="6" stroke-linecap="round" transform="rotate(-90 50 50)" stroke-dasharray="276.5" stroke-dashoffset="0"/></svg>
-            <div class="dw__time" id="dwtime">50:00</div>
-            <div class="dw__apps">
-              <div class="dw__app" data-pop="0"><span>Social</span><span>blocked</span></div>
-              <div class="dw__app" data-pop="1"><span>Video</span><span>blocked</span></div>
-              <div class="dw__app" data-pop="2"><span>Games</span><span>puzzle lock</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="proj__body">
-        <div class="tagrow"><span>003</span><span>/</span><span class="accent">Mobile</span><span class="end">In build</span></div>
-        <h3 class="disp proj__title" data-stretch>Deep Work</h3>
-        <p class="proj__stack">React Native · TypeScript · Kotlin</p>
-      </div>
-    </article>
-    <article class="card proj">
-      <div class="proj__media" data-clip>
-        <div class="term media-inner">
-          <p data-pop="0"><span class="caret">›</span> <b>fetch_diff</b> pull request opened</p>
-          <p data-pop="1"><span class="caret">›</span> <b>recall</b> past reviews on similar code</p>
-          <p data-pop="2"><span class="caret">›</span> <b>draft</b> inline comments</p>
-          <p data-pop="3"><span class="caret">›</span> <b>eval</b> match vs ground truth</p>
-          <p class="term__foot">son-of-anton <span class="caret" id="caret">_</span></p>
-        </div>
-      </div>
-      <div class="proj__body">
-        <div class="tagrow"><span>002</span><span>/</span><span class="accent">Agent</span><span class="end">Shipped</span></div>
-        <h3 class="disp proj__title" data-stretch>Son of Anton</h3>
-        <p class="proj__stack">TypeScript · LLM tool use · eval harness</p>
-      </div>
-    </article>
-  </div>
-</div></section>
-
-<!-- 3. Agents you can read -->
-<section class="scene" id="s3"><div class="stage">
-  <div class="split2">
-    <div>
-      <span class="label accent" style="font-size:18px">How I ship agents</span>
-      <h2 class="disp h2"><span class="line"><span>Not a demo.</span></span><span class="line"><span class="serif muted" style="font-size:0.62em">A trace you can read.</span></span></h2>
+<!-- COMPANY SCENES (filled from data below) -->
+<template id="company">
+  <section class="scene">
+    <div class="copy">
+      <div class="eyebrow" data-in><b></b><span data-k="num"></span></div>
+      <h2 class="name" data-in data-k="name"></h2>
+      <p class="tag serif" data-in data-k="tag"></p>
+      <div class="role" data-in data-k="role"></div>
+      <div class="when" data-in data-k="when"></div>
     </div>
-    <figure class="trace">
-      <figcaption><span><span style="color:var(--paper)">son-of-anton</span> · run</span><span>review pull request</span></figcaption>
-      <ol class="steps-trace">
-        <li data-row><span>01</span><span><b>receive</b> webhook: PR opened</span><span class="accent">✓</span></li>
-        <li data-row><span>02</span><span><b>fetch_diff</b> GitHub API</span><span class="accent">✓</span></li>
-        <li data-row><span>03</span><span><b>retrieve</b> similar past reviews</span><span class="accent">✓</span></li>
-        <li data-row><span>04</span><span><b>plan</b> pick review focus areas</span><span class="accent">✓</span></li>
-        <li data-row><span>05</span><span><b>comment</b> inline comments drafted</span><span class="accent">✓</span></li>
-        <li data-row><span>06</span><span><b>guardrail</b> tone + accuracy check</span><span class="accent">✓</span></li>
-      </ol>
-    </figure>
-  </div>
-</div></section>
+    <div class="browser" data-dev style="left:700px;top:170px;width:1120px;height:700px">
+      <div class="bar"><i></i><i></i><i></i><div class="url" data-k="url"></div></div>
+      <div class="view"><img data-k="desk" data-scroll></div>
+    </div>
+    <div class="phone" data-dev style="left:1560px;top:430px;width:290px;height:600px">
+      <div class="view"><img data-k="phone" data-scroll></div>
+    </div>
+  </section>
+</template>
 
-<!-- 4. The Go bench -->
-<section class="scene" id="s4"><div class="stage">
-  <span class="label accent" style="font-size:18px">Open source &amp; experiments</span>
-  <h2 class="disp h2"><span class="line"><span>Systems, <span class="serif muted">mostly in Go.</span></span></span></h2>
-  <div class="index">
-    <table><tbody>
-      <tr data-row><td>Warden</td><td>LLM gateway + observability</td><td>Go · Next.js</td></tr>
-      <tr data-row><td>Reverie</td><td>Agent memory + dreaming engine</td><td>Go</td></tr>
-      <tr data-row><td>Specter</td><td>Shadow traffic mirror</td><td>Go · consistent hashing · gossip</td></tr>
-      <tr data-row><td>Sanctum</td><td>Encrypted TUI chat</td><td>Go · NaCl · Bubble Tea</td></tr>
-      <tr data-row><td>PrivateTM</td><td>Private payments + prediction market</td><td>Go · Chainlink CRE · Solidity</td></tr>
-      <tr data-row><td>Qraven</td><td>Event + ticketing backend</td><td>Go · Gin · Postgres · Redis</td></tr>
-    </tbody></table>
+<!-- OWN BUILDS -->
+<section class="scene" id="own" style="background:#FFF3E2">
+  <h2 class="head" data-in>And my own <span class="serif">builds.</span></h2>
+  <div class="browser" data-dev style="left:120px;top:250px;width:1000px;height:600px">
+    <div class="bar"><i></i><i></i><i></i><div class="url">reelstack</div></div>
+    <div class="view" data-cycle="0">
+      <img src="img/dashboard.jpg" style="height:100%;object-fit:cover;object-position:top">
+      <img src="img/search.jpg" style="height:100%;object-fit:cover;object-position:top">
+      <img src="img/home.jpg" style="height:100%;object-fit:cover;object-position:top">
+    </div>
   </div>
-</div></section>
+  <div class="cap" style="left:120px;top:884px" data-in>Reelstack<span>Social watchlist + Riley, an AI agent</span></div>
+  <div class="phone" data-dev style="left:1210px;top:220px;width:280px;height:600px">
+    <div class="view" data-cycle="0.5">
+      <img src="img/qraven-screenq1.jpg"><img src="img/qraven-screenq10.jpg"><img src="img/qraven-screenq11.jpg">
+    </div>
+  </div>
+  <div class="cap" style="left:1210px;top:854px" data-in>QRaven<span>Event ticketing, Go backend</span></div>
+  <div class="phone" data-dev style="left:1530px;top:220px;width:280px;height:600px">
+    <div class="view" data-cycle="0.25">
+      <img src="img/zush-screen2.jpg"><img src="img/zush-screen3.jpg"><img src="img/zush-screen5.jpg">
+    </div>
+  </div>
+  <div class="cap" style="left:1530px;top:854px" data-in>Zush<span>AI-assisted video app</span></div>
+</section>
 
-<!-- 5. Shipped with -->
-<section class="scene" id="s5"><div class="stage">
-  <span class="label big">Shipped with</span>
-  <div class="names">
-    <span class="co">Grupp</span><span class="co">Sovalabs</span><span class="co">Throughline</span>
-    <span class="co">Gearsparks</span><span class="co">Cleverfolks</span><span class="co">Shippack</span>
+<!-- OUTRO -->
+<section class="scene" id="outro">
+  <div class="mosaic">
+    <img src="img/trygrupp-d.jpg"><img src="img/worksage-d.jpg"><img src="img/throughline-d.jpg"><img src="img/theshippack-d.jpg"><img src="img/home.jpg">
+    <img src="img/home.jpg"><img src="img/theshippack-d.jpg"><img src="img/trygrupp-d.jpg"><img src="img/search.jpg"><img src="img/worksage-d.jpg">
+    <img src="img/throughline-d.jpg"><img src="img/home.jpg"><img src="img/worksage-d.jpg"><img src="img/trygrupp-d.jpg"><img src="img/theshippack-d.jpg">
+    <img src="img/search.jpg"><img src="img/throughline-d.jpg"><img src="img/home.jpg"><img src="img/worksage-d.jpg"><img src="img/home.jpg">
   </div>
-</div></section>
+  <div class="center">
+    <h2 data-in>Jay</h2>
+    <div class="sub serif" data-in>Software &amp; applied AI engineer.</div>
+    <div class="pill" data-in>jayfolio.dev</div>
+    <div class="small" data-in>Open for contracts · Open to roles</div>
+  </div>
+</section>
 
-<!-- 6. Outro -->
-<section class="scene contact" id="s6"><div class="stage">
-  <h2 class="disp contact__title"><span class="line"><span>Let's build</span></span><span class="line"><span class="serif">the thing.</span></span></h2>
-  <div class="foot" data-fade>
-    <svg width="72" height="72" viewBox="0 0 100 100"><rect width="100" height="100" rx="26" fill="#0C0C0B"/><path d="M24 33 L41 50 L24 67" fill="none" stroke="#EEEBE4" stroke-width="10" stroke-linecap="square"/><path d="M72 24 V60 A12 12 0 0 1 48 60" fill="none" stroke="#EEEBE4" stroke-width="10" stroke-linecap="square"/><rect x="66" y="74" width="12" height="6" fill="#D2F53C"/></svg>
-    <span class="domain">jayfolio.dev</span>
-    <span class="label">Open for contracts · Open to roles</span>
-  </div>
-</div></section>
+<div class="shade" id="shade"></div>
 
 <script>
+const COMPANIES = [
+  { id: "grupp", num: "01 · Fintech", name: "Grupp", tag: "Digital platform for banks.", role: "Software Engineer · banking + BaaS", when: "2026 – present", url: "trygrupp.africa", desk: "img/trygrupp-d.jpg", phone: "img/trygrupp-p.jpg", deskTo: 980, phoneTo: 1008, brand: "#2E9FDB", bg: "#E6F3FA" },
+  { id: "worksage", num: "02 · AI SaaS", name: "WorkSage", tag: "One intelligence layer. Everywhere you work.", role: "Forward-Deployed Engineer", when: "via Gearsparks · 2025 – 26", url: "worksage.ai", desk: "img/worksage-d.jpg", phone: "img/worksage-p.jpg", deskTo: 1030, phoneTo: 550, brand: "#7A2E9E", bg: "#F1E8F5" },
+  { id: "throughline", num: "03 · SaaS", name: "Throughline", tag: "Growth shouldn’t need you to be the hero.", role: "Fullstack Engineer · V2 backend", when: "formerly Mission Sync · 2025 – 26", url: "throughline.team", desk: "img/throughline-d.jpg", phone: "img/throughline-p.jpg", deskTo: 1820, phoneTo: 1420, brand: "#E0752F", bg: "#F3F1EC" },
+  { id: "shippack", num: "04 · Logistics", name: "ShipPack", tag: "Move anything, anytime across North America.", role: "Software Developer · tracking + pricing", when: "2023 – 24", url: "theshippack.com", desk: "img/theshippack-d.jpg", phone: "img/theshippack-p.jpg", deskTo: 2730, phoneTo: 229, brand: "#3340B0", bg: "#E9EAF7" },
+];
+const tpl = document.getElementById("company");
+const outro = document.getElementById("outro");
+for (const c of COMPANIES) {
+  const s = tpl.content.firstElementChild.cloneNode(true);
+  s.id = c.id; s.style.background = c.bg; s.style.setProperty("--brand", c.brand);
+  s.querySelectorAll("[data-k]").forEach((el) => {
+    const k = el.dataset.k;
+    if (el.tagName === "IMG") el.src = c[k]; else el.textContent = c[k];
+  });
+  document.body.insertBefore(s, document.getElementById("own"));
+}
+
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
-const p = (t, start, dur) => clamp((t - start) / dur);
+const p = (t, a, d) => clamp((t - a) / d);
 const expo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
-const inOut = (x) => (x < 0.5 ? 8 * x ** 4 : 1 - Math.pow(-2 * x + 2, 4) / 2);
+const inOut = (x) => (x < 0.5 ? 4 * x ** 3 : 1 - Math.pow(-2 * x + 2, 3) / 2);
 const lerp = (a, b, x) => a + (b - a) * x;
 
-// scene: [id, start, end]; each new scene wipes up over the previous one.
-const SCENES = [["s1", 0, 4], ["s2", 4, 8], ["s3", 8, 11], ["s4", 11, 14], ["s5", 14, 17], ["s6", 17, 21]];
-const WIPE = 0.5;
+// 120 BPM: every boundary is on a beat (0.5 s grid).
+const SCENES = [["hook", 0, 3], ["grupp", 3, 6.5], ["worksage", 6.5, 10], ["throughline", 10, 13.5], ["shippack", 13.5, 17], ["own", 17, 21], ["outro", 21, 24]];
+const PUSH = 0.55;
 
-function lineRise(spans, t, t0, step, dur = 0.9) {
-  spans.forEach((s, i) => {
-    const k = expo(p(t, t0 + i * step, dur));
-    s.style.transform = `translateY(${lerp(112, 0, k)}%) rotate(${lerp(3, 0, k)}deg)`;
+function textIn(scene, t, t0, step = 0.09) {
+  $$("[data-in]", scene).forEach((el, i) => {
+    const k = expo(p(t, t0 + i * step, 0.7));
+    el.style.opacity = clamp(k * 1.4);
+    el.style.transform = `translateY(${lerp(40, 0, k)}px)`;
   });
 }
-function pop(els, t, t0, step, dur = 0.45) {
-  els.forEach((e, i) => {
-    const k = expo(p(t, t0 + i * step, dur));
-    e.style.opacity = k;
-    e.style.transform = `translateY(${lerp(14, 0, k)}px)`;
-  });
+function scrollImg(img, t, t0, dur, frac, px) {
+  const view = img.parentElement;
+  const limit = Math.max(0, img.offsetHeight - view.clientHeight);
+  const max = px != null ? Math.min(px, limit) : limit * frac;
+  img.style.transform = `translateY(${-max * inOut(p(t, t0, dur))}px)`;
 }
 
 window.render = function (t) {
   SCENES.forEach(([id, a, b], i) => {
     const el = document.getElementById(id);
-    const last = i === SCENES.length - 1;
-    const visible = t >= a && (last || t < b + WIPE);
-    el.style.display = visible ? "block" : "none";
+    const next = SCENES[i + 1];
+    const inNow = t >= a && t < b + (next ? PUSH : 1);
+    el.style.display = inNow ? "block" : "none";
     el.style.zIndex = i + 1;
-    if (i > 0) {
-      const k = inOut(p(t, a, WIPE));
-      el.style.clipPath = k >= 1 ? "none" : `inset(${lerp(100, 0, k)}% 0 0 0)`;
-    }
+    // push in from the right; the outgoing scene drifts left and dims under it
+    const kin = i === 0 ? 1 : inOut(p(t, a, PUSH));
+    const kout = next ? inOut(p(t, b, PUSH)) : 0;
+    el.style.transform = `translateX(${lerp(100, 0, kin) - 22 * kout}%) scale(${1 - 0.04 * kout})`;
+    el.style.filter = kout > 0 ? `brightness(${1 - 0.35 * kout})` : "";
   });
 
-  // 1. Hook
-  {
-    const s = $("#s1");
-    lineRise($$(".line > span", s), t, 0.1, 0.5);
-    const f = $("[data-fade]", s);
-    const k = expo(p(t, 0.05, 0.8));
-    f.style.opacity = k; f.style.transform = `translateY(${lerp(20, 0, k)}px)`;
-    $(".stage", s).style.transform = `scale(${lerp(1, 1.035, p(t, 0, 4.5))})`;
+  // hook
+  const hook = $("#hook");
+  $$(".line > span", hook).forEach((s, i) => {
+    const k = expo(p(t, 0.15 + i * 0.5, 0.9));
+    s.style.transform = `translateY(${lerp(110, 0, k)}%)`;
+  });
+  textIn(hook, t, 0.05);
+  $$("[data-fan]", hook).forEach((el, i) => {
+    const t0 = 0.25 + i * 0.5;
+    const k = expo(p(t, t0, 0.8));
+    const rot = [-7, 4, -3, 6][i];
+    el.style.opacity = clamp(k * 2);
+    el.style.transform = `translate(${lerp(500, 0, k)}px, ${lerp(80, 0, k)}px) rotate(${lerp(rot * 2.2, rot, k)}deg)`;
+    scrollImg($("img", el), t, t0 + 0.4, 2.4, 0.12);
+  });
+
+  // companies
+  for (const c of COMPANIES) {
+    const [, a] = SCENES.find((s) => s[0] === c.id);
+    const s = document.getElementById(c.id);
+    textIn(s, t, a + 0.25);
+    const [br, ph] = $$("[data-dev]", s);
+    const kb = expo(p(t, a + 0.2, 1.0)), kp = expo(p(t, a + 0.45, 1.0));
+    br.style.transform = `translateY(${lerp(140, 0, kb)}px) rotate(${lerp(2.5, 0, kb)}deg)`;
+    ph.style.transform = `translateY(${lerp(260, 0, kp)}px) rotate(${lerp(-6, 0, kp)}deg)`;
+    scrollImg($("img", br), t, a + 0.9, 2.6, 0, c.deskTo);
+    scrollImg($("img", ph), t, a + 1.0, 2.5, 0, c.phoneTo);
   }
-  // 2. Three surfaces
-  {
-    const s = $("#s2");
-    $$(".card", s).forEach((c, i) => {
-      const t0 = 4.15 + i * 0.5;
-      const k = inOut(p(t, t0, 0.8));
-      c.style.clipPath = `inset(${lerp(100, 0, k)}% 0 0 0 round 22px)`;
-      const inner = $(".media-inner", c);
-      inner.style.transform = `scale(${lerp(1.18, 1, expo(p(t, t0, 1.4)))})`;
-      const title = $("[data-stretch]", c);
-      title.style.fontStretch = `${lerp(125, 75, expo(p(t, t0 + 0.2, 1.2)))}%`;
-      pop($$("[data-pop]", c), t, t0 + 0.5, 0.25);
-    });
-    // Deep Work timer ticking down while the scene plays.
-    const secs = Math.max(0, 3000 - Math.floor(p(t, 4.6, 3.4) * 12 * 60));
-    $("#dwtime").textContent = `${String(Math.floor(secs / 60)).padStart(2, "0")}:${String(secs % 60).padStart(2, "0")}`;
-    $("#ring").setAttribute("stroke-dashoffset", String(276.5 * (1 - secs / 3000)));
-    $("#caret").style.opacity = Math.floor(t * 2) % 2 ? 0 : 1;
-    $(".stage", s).style.transform = `translateY(${lerp(12, -12, p(t, 4, 4.5))}px)`;
-  }
-  // 3. Trace
-  {
-    const s = $("#s3");
-    lineRise($$(".line > span", s), t, 8.15, 0.35);
-    $$("[data-row]", s).forEach((r, i) => {
-      const k = expo(p(t, 8.5 + i * 0.25, 0.5));
-      r.style.opacity = k; r.style.transform = `translateX(${lerp(-24, 0, k)}px)`;
-      r.style.background = t >= 8.5 + i * 0.25 && t < 8.75 + i * 0.25 ? "var(--graphite)" : "transparent";
-    });
-  }
-  // 4. Index with a stretch sweep
-  {
-    const s = $("#s4");
-    lineRise($$(".line > span", s), t, 11.1, 0.3);
-    $$("[data-row]", s).forEach((r, i) => {
-      const k = expo(p(t, 11.25 + i * 0.1, 0.5));
-      r.style.opacity = k; r.style.transform = `translateY(${lerp(18, 0, k)}px)`;
-      const name = r.firstElementChild;
-      const h0 = 11.9 + i * 0.25; // one row per half-beat
-      const up = expo(p(t, h0, 0.35)), down = expo(p(t, h0 + 0.45, 0.6));
-      const lit = up * (1 - down);
-      name.style.fontStretch = `${75 + 40 * lit}%`;
-      name.style.color = lit > 0.5 ? "var(--volt)" : "";
-      r.style.background = `rgba(22,22,20,${lit})`;
-    });
-  }
-  // 5. Shipped with
-  {
-    const s = $("#s5");
-    const lab = $(".label", s);
-    lab.style.opacity = expo(p(t, 14.05, 0.4));
-    $$(".co", s).forEach((c, i) => {
-      const t0 = 14.25 + i * 0.25; // eighth notes
-      const k = expo(p(t, t0, 0.7));
-      c.style.opacity = clamp(k * 1.6);
-      c.style.transform = `translateY(${lerp(60, 0, k)}px)`;
-      c.style.fontStretch = `${lerp(125, 75, k)}%`;
-    });
-  }
-  // 6. Outro
-  {
-    const s = $("#s6");
-    lineRise($$(".line > span", s), t, 17.2, 0.35, 1.0);
-    const f = $("[data-fade]", s);
-    const k = expo(p(t, 18.3, 0.8));
-    f.style.opacity = k; f.style.transform = `translateY(${lerp(24, 0, k)}px)`;
-    $(".stage", s).style.transform = `scale(${lerp(1.03, 1, expo(p(t, 17, 3)))})`;
-  }
+
+  // own builds: screens swap on the beat
+  const own = $("#own");
+  textIn(own, t, 17.25, 0.12);
+  $$("[data-dev]", own).forEach((el, i) => {
+    const k = expo(p(t, 17.3 + i * 0.25, 0.9));
+    el.style.transform = `translateY(${lerp(200, 0, k)}px)`;
+  });
+  $$("[data-cycle]", own).forEach((v) => {
+    const off = Number(v.dataset.cycle);
+    const imgs = $$("img", v);
+    const idx = clamp(Math.floor((t - 17.75 - off) / 1.0), 0, imgs.length - 1);
+    imgs.forEach((im, j) => (im.style.display = j === idx ? "block" : "none"));
+  });
+
+  // outro
+  const o = $("#outro");
+  textIn(o, t, 21.2, 0.14);
+  $(".mosaic", o).style.transform = `rotate(-8deg) translate(${lerp(0, -160, p(t, 21, 3))}px, ${lerp(0, -60, p(t, 21, 3))}px)`;
 };
-// Hidden scenes don't trigger font loads, so request every face up front.
+
 window.ready = Promise.all([
-  "800 condensed 40px 'Hubot Sans Variable'", "800 expanded 40px 'Hubot Sans Variable'", "400 16px 'Mona Sans Variable'",
-  "600 16px 'Mona Sans Variable'", "italic 350 40px 'Newsreader Variable'", "400 16px 'Monaspace Neon'",
-].map((f) => document.fonts.load(f, "AZaz09&.,›✓·"))).then(() => document.fonts.ready).then(() => { render(0); return true; });
+  document.fonts.load("750 40px 'Inter Variable'", "AZaz"), document.fonts.load("400 16px 'Inter Variable'", "AZaz"),
+  document.fonts.load("italic 400 40px 'Instrument Serif'", "AZaz"),
+  ...Array.from(document.images).map((im) => im.decode().catch(() => {})),
+]).then(() => document.fonts.ready).then(() => { render(0); return true; });
 </script>
 </body>
 </html>

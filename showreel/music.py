@@ -1,4 +1,4 @@
-"""Original soundtrack for the showreel: 120 BPM, A minor, 21 s, 48 kHz stereo.
+"""Original soundtrack, cut 2: 120 BPM, F major, 24 s, 48 kHz stereo.
 
 Every event is placed on the beat grid counted from sample 0, so cuts in the
 video (all on beats) line up with the music.
@@ -11,7 +11,7 @@ import numpy as np
 SR = 48000
 BPM = 120
 BEAT = 60 / BPM          # 0.5 s
-DUR = 21.0
+DUR = 24.0
 N = int(DUR * SR)
 rng = np.random.default_rng(7)
 
@@ -52,19 +52,19 @@ def saw(freq, n, detune=0.0):
 
 
 # ---------- arrangement ----------
-CHORDS = [  # one per bar (2 s): Am F C G ...
-    ([57, 60, 64], 33), ([53, 57, 60], 29), ([55, 60, 64], 36), ([55, 59, 62], 31),
+CHORDS = [  # one per bar (2 s): F C Dm Bb ...
+    ([57, 60, 65], 29), ([55, 60, 64], 36), ([57, 62, 65], 26), ([58, 62, 65], 34),
 ] * 3
-GROOVE_START, GROOVE_END = 4.0, 17.0
-IMPACT = 17.0
+GROOVE_START, GROOVE_END = 3.0, 21.0
+IMPACT = 21.0
 
-kick_times = [b * BEAT for b in range(0, 8, 2)] + [b * BEAT for b in range(8, 34)] + [IMPACT]
-clap_times = [b * BEAT for b in range(8, 34) if b % 2 == 1]
-hat_times = [b * BEAT + BEAT / 2 for b in range(8, 34)]
-hat16_times = [b * BEAT / 4 for b in range(int(8 / (BEAT / 4)), int(GROOVE_END / (BEAT / 4))) if b % 2 == 1]
-cuts = [4.0, 8.0, 11.0, 14.0, 17.0]
-ticks = [4.15 + 0.5 * i for i in range(3)] + [8.5 + 0.25 * i for i in range(6)] \
-    + [11.9 + 0.25 * i for i in range(6)] + [14.25 + 0.25 * i for i in range(6)]
+kick_times = [b * BEAT for b in range(0, 6, 2)] + [b * BEAT for b in range(6, 42)] + [IMPACT]
+clap_times = [b * BEAT for b in range(6, 42) if b % 2 == 1]
+hat_times = [b * BEAT + BEAT / 2 for b in range(6, 42)]
+hat16_times = [b * BEAT / 4 for b in range(int(10 / (BEAT / 4)), int(GROOVE_END / (BEAT / 4))) if b % 2 == 1]
+cuts = [3.0, 6.5, 10.0, 13.5, 17.0, 21.0]
+ticks = [0.25 + 0.5 * i for i in range(4)] + [a + 0.5 for a in (3.0, 6.5, 10.0, 13.5)] \
+    + [17.75 + 0.25 * i for i in range(9)]
 
 L = np.zeros(N)
 R = np.zeros(N)
@@ -165,7 +165,7 @@ send += (pad_mix_L + pad_mix_R) * 0.25
 
 # pluck arpeggio, 16ths, ping-pong delay
 pl = np.zeros(N)
-pattern = [0, 1, 2, 1, 0, 2, 1, 2]
+pattern = [0, 2, 1, 2, 0, 2, 1, 2]
 for bar, (notes, _) in enumerate(CHORDS):
     for s in range(16):
         t0 = bar * 2 + s * BEAT / 4
@@ -186,8 +186,26 @@ L += plL
 R += plR
 send += pl * 0.4
 
+
+# offbeat chord stabs: sine + soft harmonics, short and bright
+ep = np.zeros(N)
+for bar, (notes, _) in enumerate(CHORDS):
+    for bt in range(4):
+        t0 = bar * 2 + bt * BEAT + BEAT / 2
+        if not (GROOVE_START <= t0 < GROOVE_END):
+            continue
+        n = int(0.32 * SR)
+        t = np.arange(n) / SR
+        env = np.minimum(1, t / 0.003) * np.exp(-t / 0.11)
+        sig = sum(np.sin(2 * np.pi * mtof(m + 12) * t) + 0.35 * np.sin(4 * np.pi * mtof(m + 12) * t) for m in notes)
+        place(ep, sig * env, t0, 0.07)
+ep = lowpass(ep, 4200) * duck
+L += ep * 0.9
+R += ep * 1.1
+send += ep * 0.35
+
 # risers into the drop (4 s) and the company slam (14 s)
-for end, length, g in ((4.0, 2.0, 0.16), (14.0, 2.0, 0.12)):
+for end, length, g in ((3.0, 1.5, 0.14), (17.0, 2.0, 0.12), (21.0, 1.5, 0.10)):
     n = int(length * SR)
     t = np.arange(n) / SR
     noise = rng.standard_normal(n)
@@ -218,8 +236,8 @@ for i, tk in enumerate(ticks):
 # impact at 17 s: sub boom + Am stab ringing out
 n = int(4.0 * SR)
 t = np.arange(n) / SR
-boom = np.sin(2 * np.pi * (55 + 25 * np.exp(-t / 0.05)) * t) * np.exp(-t / 0.9)
-stab = sum(saw(mtof(m), n, dt) for m in (45, 57, 60, 64, 69) for dt in (-0.003, 0.003))
+boom = np.sin(2 * np.pi * (44 + 25 * np.exp(-t / 0.05)) * t) * np.exp(-t / 0.9)
+stab = sum(saw(mtof(m), n, dt) for m in (41, 53, 57, 60, 65) for dt in (-0.003, 0.003))
 stab = lowpass(stab * np.exp(-t / 1.4) * np.minimum(1, t / 0.005), 2200)
 place(L, boom, IMPACT, 0.55)
 place(R, boom, IMPACT, 0.55)
@@ -227,7 +245,7 @@ place(L, stab, IMPACT, 0.045)
 place(R, stab, IMPACT, 0.045)
 place(send, stab, IMPACT, 0.06)
 # a soft hat pulse keeps time through the outro
-for b in range(34, 40):
+for b in range(42, 47):
     place(L, H, b * BEAT + BEAT / 2, 0.05)
     place(R, H, b * BEAT + BEAT / 2, 0.05)
 

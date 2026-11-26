@@ -155,7 +155,7 @@ export default async function Page() {
           </svg>
           <div className="reel__frame grid-bg" data-reel-scale data-cursor="Play">
             <div className="vid" data-video data-autoplay style={{ position: "absolute", inset: 0, background: "transparent" }}>
-              <video muted loop playsInline preload="none" aria-label="Showreel loop: Reelstack, Deep Work and Son of Anton in use">
+              <video muted loop playsInline preload="none" aria-label="Showreel loop: Grupp, WorkSage, Throughline and ShipPack, live">
                 <source data-src="/videos/showreel-loop.mp4" type="video/mp4" />
                 <source data-src="/videos/showreel-loop.webm" type="video/webm" />
               </video>
@@ -170,7 +170,7 @@ export default async function Page() {
             </div>
             <div className="reel__chips">
               <span className="chip chip--on">Showreel {new Date().getFullYear()}</span>
-              <span className="chip chip--extra">Muted loop 0:12 · full cut 0:21 on click</span>
+              <span className="chip chip--extra">Muted loop 0:12 · full cut 0:24 on click</span>
             </div>
             <button className="reel__play" type="button" aria-label="Play the full showreel" data-open-player="/videos/showreel-full.mp4">
               <PlayIcon size={26} />
