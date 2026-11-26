@@ -35,12 +35,22 @@ npm run build
 Set `NEXT_PUBLIC_FORM_ENDPOINT` (e.g. a Formspree form URL) to POST enquiries as JSON.
 Without it, submitting opens the visitor's email app with the enquiry pre-filled.
 
+## Showreel
+
+The hero showreel (`public/videos/showreel-*`) is generated, not filmed: `showreel/index.html` animates the site's real
+components frame by frame, `showreel/music.py` synthesises the soundtrack (120 BPM, A minor), and `showreel/build.sh`
+renders and encodes everything. Made with the [/brag](https://github.com/latent-spaces/brag) workflow; `showreel/plan.md`
+is the storyboard.
+
+```bash
+./showreel/build.sh
+```
+
 ## Videos
 
 Each card loads its video only when needed: on hover/focus with a mouse, or when it scrolls into view on touch.
 Files it looks for in `public/videos/`:
 
-- `showreel-loop.mp4` (+ optional `.webm`), `showreel-full.mp4`
 - `reelstack-loop.mp4`, `son-of-anton-loop.mp4`, `deepwork-loop.mp4`, `litt-loop.mp4`, `qraven-loop.mp4`
 - `reelstack-walkthrough.mp4` + `reelstack-walkthrough.vtt`, `reelstack-desktop-lists.mp4`, `reelstack-mobile-riley.mp4`
 
