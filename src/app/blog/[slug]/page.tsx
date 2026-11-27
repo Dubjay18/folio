@@ -1,9 +1,13 @@
-import { getPost } from "@/data/blog";
-import { DATA } from "@/data/resume";
+import { Shell } from "@/components/chrome";
+import { CASE_MENU, CASE_NAV, SITE } from "@/data/site";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { getAllPosts, getPost } from "@/data/blog";
+
+export async function generateStaticParams() {
+  return (await getAllPosts()).map((p) => ({ slug: p.slug }));
+}
 
 export async function generateMetadata({
   params,
@@ -13,6 +17,7 @@ export async function generateMetadata({
   };
 }): Promise<Metadata | undefined> {
   let post = await getPost(params.slug);
+  if (!post) return;
 
   let {
     title,
@@ -20,7 +25,7 @@ export async function generateMetadata({
     summary: description,
     image,
   } = post.metadata;
-  let ogImage = image ? `${DATA.url}${image}` : `${DATA.url}/og?title=${title}`;
+  let ogImage = image ? `${SITE.url}${image}` : `${SITE.url}/og?title=${title}`;
 
   return {
     title,
@@ -30,7 +35,7 @@ export async function generateMetadata({
       description,
       type: "article",
       publishedTime,
-      url: `${DATA.url}/blog/${post.slug}`,
+      url: `${SITE.url}/blog/${post.slug}`,
       images: [
         {
           url: ogImage,
@@ -60,7 +65,7 @@ export default async function Blog({
   }
 
   return (
-    <section id="blog">
+    <Shell variant="page" nav={CASE_NAV} menu={CASE_MENU}>
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -73,30 +78,29 @@ export default async function Blog({
             dateModified: post.metadata.publishedAt,
             description: post.metadata.summary,
             image: post.metadata.image
-              ? `${DATA.url}${post.metadata.image}`
-              : `${DATA.url}/og?title=${post.metadata.title}`,
-            url: `${DATA.url}/blog/${post.slug}`,
-            author: {
-              "@type": "Person",
-              name: DATA.name,
-            },
+              ? `${SITE.url}${post.metadata.image}`
+              : `${SITE.url}/og?title=${post.metadata.title}`,
+            url: `${SITE.url}/blog/${post.slug}`,
+            author: { "@type": "Person", name: SITE.name },
           }),
         }}
       />
-      <h1 className="title font-medium text-2xl tracking-tighter max-w-[650px]">
-        {post.metadata.title}
-      </h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-[650px]">
-        <Suspense fallback={<p className="h-5" />}>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+      <section className="wrap case-hero hero" aria-labelledby="post-title">
+        <div className="tagrow" data-hero-fade>
+          <a className="back u" href="/blog">
+            ← Writing
+          </a>
+          <span className="end" style={{ alignSelf: "center" }}>
             {formatDate(post.metadata.publishedAt)}
-          </p>
-        </Suspense>
-      </div>
-      <article
-        className="prose dark:prose-invert"
-        dangerouslySetInnerHTML={{ __html: post.source }}
-      ></article>
-    </section>
+          </span>
+        </div>
+        <h1 id="post-title" className="disp h2" style={{ marginTop: 20 }}>
+          {post.metadata.title}
+        </h1>
+      </section>
+      <section className="wrap" style={{ paddingBottom: "clamp(72px,9vw,128px)" }}>
+        <article className="prose" dangerouslySetInnerHTML={{ __html: post.source }} />
+      </section>
+    </Shell>
   );
 }
