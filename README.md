@@ -21,14 +21,15 @@ npm run build
 
 | Path | What |
 | --- | --- |
-| `src/data/site.ts` | All copy, links, projects, timeline, services |
+| `src/data/site.ts` | Copy, links, timeline, services, index |
+| `src/data/projects.ts` | Selected work and every case study (all facts from each project's repo) |
 | `src/app/page.tsx` | Home page |
-| `src/app/work/reelstack/page.tsx` | Case study (copy it for each project) |
+| `src/app/work/[slug]/page.tsx` | Case study template, one page per project with a case study |
 | `src/app/blog/` | Writing index (Medium RSS) and local MDX posts from `content/` |
 | `src/app/globals.css` | Tokens and all styles |
 | `src/components/motion.tsx` | Lenis, GSAP motion, video loading, menu, clock |
-| `src/components/contact-form.tsx` | Enquiry form |
-| `public/videos/` | Project videos |
+| `public/work/<slug>/` | Project logos and real screenshots |
+| `public/videos/` | Showreel, per-project walkthroughs, card loops and posters |
 
 ## Contact form
 
@@ -47,34 +48,18 @@ the soundtrack and `showreel/build.sh` renders and encodes everything. Made with
 ./showreel/build.sh
 ```
 
-## Videos
+## Project demos
 
-Each card loads its video only when needed: on hover/focus with a mouse, or when it scrolls into view on touch.
-Files it looks for in `public/videos/`:
+Each case study has a walkthrough (`<slug>-walkthrough.mp4`, with an original synthesized soundtrack) and its card
+plays a 10-second muted loop (`<slug>-loop.mp4`). They are built from the real thing:
 
-- `reelstack-loop.mp4`, `son-of-anton-loop.mp4`, `deepwork-loop.mp4`, `litt-loop.mp4`, `qraven-loop.mp4`
-- `reelstack-walkthrough.mp4` + `reelstack-walkthrough.vtt`, `reelstack-desktop-lists.mp4`, `reelstack-mobile-riley.mp4`
+- **Reelstack:** the app's own screenshots from `docs/screenshots`, plus its MCP tools and Riley's real config
+- **Son of Anton:** the real review thread SOA posted on `soa-sandbox` PR #1 (`@soa security`)
+- **Litt:** a recorded session of the real app and Go backend running the demo fixture on the stub model
+- **Qraven:** the mobile app's screenshots and the routes from `pkg/router`
+- **Reverie:** a real CLI session (`remember`, three Claude Code sessions via `reverie hook`, `dream`, `recall`, `journal`)
 
-Card loops: 6 to 12 s, muted, about 1280 px wide (720 px for phone clips), under 2 MB:
-
-```bash
-ffmpeg -i input.mov -an -vf "scale=1280:-2" -c:v libx264 -preset slow -crf 28 -movflags +faststart reelstack-loop.mp4
-```
-
-If a file is missing, the labelled placeholder stays visible.
-
-## Résumé
-
-`public/resume.pdf` is generated from `resume/resume.md`. After editing the markdown:
-
-```bash
-npx -y -p playwright node scripts/build-resume.mjs
-```
-
-## Before launch
-
-- Replace everything in `[BRACKETS]` in `src/data/site.ts` and the case study (metrics, dates, URLs)
-- Set `NEXT_PUBLIC_FORM_ENDPOINT` in Vercel
+Cards load video only on intent: on hover/focus with a mouse, or when scrolled into view on touch.
 
 # License
 

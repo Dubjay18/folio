@@ -1,12 +1,12 @@
 import { Arrow, Roll, Shell } from "@/components/chrome";
 import { ContactForm } from "@/components/contact-form";
 import { getBlogPosts } from "@/data/blog";
+import { PROJECTS, videoFor, type Project } from "@/data/projects";
 import {
   CLIENTS,
   HOME_MENU,
   HOME_NAV,
   INDEX_ROWS,
-  PROJECTS,
   SERVICES,
   SITE,
   SKILLS,
@@ -14,7 +14,6 @@ import {
   STEPS,
   TIMELINE,
   TRACE_ROWS,
-  type Project,
 } from "@/data/site";
 
 // Re-fetch the Medium feed at most once an hour.
@@ -42,8 +41,23 @@ function TagRow({ n, tags, status }: { n: string; tags: string[]; status: string
   );
 }
 
+function LoopVideo({ p }: { p: Project }) {
+  const v = videoFor(p.slug);
+  return (
+    <div className="vid" data-video>
+      <video muted loop playsInline preload="none" poster={v.poster} aria-label={`${p.name} demo loop`}>
+        <source data-src={v.loop} type="video/mp4" />
+      </video>
+      <div className="vid__ph">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={v.poster} alt="" className="vid__poster" />
+      </div>
+    </div>
+  );
+}
+
 function ProjectMedia({ p }: { p: Project }) {
-  const m = p.media;
+  const m = p.card;
   if (m.kind === "term") {
     return (
       <div className="term media-inner">
@@ -53,26 +67,23 @@ function ProjectMedia({ p }: { p: Project }) {
           </p>
         ))}
         <p className="term__foot">
-          [ {m.video.split("/").pop()} ]<span className="caret cursor-block">_</span>
+          {m.foot}
+          <span className="caret cursor-block">_</span>
         </p>
-        <div className="vid" data-video>
-          <video muted loop playsInline preload="none" aria-label={p.videoLabel}>
-            <source data-src={m.video} type="video/mp4" />
-          </video>
-          <div className="vid__ph" />
-        </div>
+        <LoopVideo p={p} />
       </div>
     );
   }
-  const vid = (
-    <div className="vid" data-video>
-      <video muted loop playsInline preload="none" aria-label={p.videoLabel}>
-        <source data-src={m.video} type="video/mp4" />
-      </video>
-      <div className="vid__ph">{m.placeholder}</div>
-    </div>
-  );
-  if (m.kind === "phone") return <div className="phone media-inner">{vid}</div>;
+  if (m.kind === "phone") {
+    return (
+      <div className="phone media-inner phone--brand">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={p.logo} alt="" width={72} height={72} />
+        <span className="disp">{p.name}</span>
+        <span className="label">{p.status}</span>
+      </div>
+    );
+  }
   return (
     <div className="browser media-inner">
       <div className="browser__bar">
@@ -81,8 +92,37 @@ function ProjectMedia({ p }: { p: Project }) {
         <i />
         <span>{m.url}</span>
       </div>
-      {vid}
+      <LoopVideo p={p} />
     </div>
+  );
+}
+
+function ProjectCard({ p }: { p: Project }) {
+  const inner = (
+    <>
+      <div className="proj__media" data-clip>
+        <ProjectMedia p={p} />
+      </div>
+      <div className="proj__body">
+        <TagRow n={p.n} tags={p.tags} status={p.status} />
+        <h3 className="disp proj__title">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="proj__logo" src={p.logo} alt="" width={40} height={40} />
+          {p.name}
+        </h3>
+        <p className="proj__blurb">{p.blurb}</p>
+        <p className="proj__stack">{p.stack}</p>
+      </div>
+    </>
+  );
+  return p.caseStudy ? (
+    <a className="card proj" href={`/work/${p.slug}`} data-reveal data-hover-video data-cursor="View">
+      {inner}
+    </a>
+  ) : (
+    <article className="card proj" data-reveal>
+      {inner}
+    </article>
   );
 }
 
@@ -231,73 +271,68 @@ export default async function Page() {
       <section id="work" className="wrap section" aria-labelledby="work-title">
         <div className="section__head">
           <h2 id="work-title" className="disp h2" data-split>
-            Selected work <sup>({String(PROJECTS.length + 1).padStart(2, "0")})</sup>
+            Selected work <sup>({String(PROJECTS.length).padStart(2, "0")})</sup>
           </h2>
           <p className="section__lede" data-reveal>
-            Every project ships with a silent loop on the card and a narrated walkthrough inside. Hover a card to play; on
-            a phone it plays as you scroll.
+            Every project has a demo cut from the real thing: recorded runs, real output, real screens. Hover a card to
+            play; on a phone it plays as you scroll.
           </p>
         </div>
 
-        <a className="card featured" href="/work/reelstack" data-reveal data-hover-video data-cursor="View">
-          <div className="featured__media" data-clip>
-            <div className="browser media-inner">
-              <div className="browser__bar">
-                <i />
-                <i />
-                <i />
-                <span>[reelstack URL]</span>
+        {(() => {
+          const f = PROJECTS[0];
+          const v = videoFor(f.slug);
+          return (
+            <a className="card featured" href={`/work/${f.slug}`} data-reveal data-hover-video data-cursor="View">
+              <div className="featured__media" data-clip>
+                <div className="browser media-inner">
+                  <div className="browser__bar">
+                    <i />
+                    <i />
+                    <i />
+                    <span>{f.card.kind === "browser" ? f.card.url : f.slug}</span>
+                  </div>
+                  <div className="vid" data-video>
+                    <video muted loop playsInline preload="none" poster={v.poster} aria-label={`${f.name} demo loop`}>
+                      <source data-src={v.loop} type="video/mp4" />
+                    </video>
+                    <div className="vid__ph">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={v.poster} alt="" className="vid__poster" />
+                    </div>
+                  </div>
+                </div>
+                <span className="play-dot" aria-hidden="true">
+                  <PlayIcon />
+                </span>
               </div>
-              <div className="vid" data-video>
-                <video muted loop playsInline preload="none" aria-label="Reelstack: building a shared watchlist with Riley">
-                  <source data-src="/videos/reelstack-loop.webm" type="video/webm" />
-                  <source data-src="/videos/reelstack-loop.mp4" type="video/mp4" />
-                </video>
-                <div className="vid__ph">[ reelstack-loop.mp4 · 16:10 ]</div>
+              <div className="featured__body">
+                <TagRow n={f.n} tags={f.tags} status={f.status} />
+                <div>
+                  <h3 className="disp featured__title">{f.name}</h3>
+                  <p className="featured__blurb">{f.blurb}</p>
+                </div>
+                <dl className="dl">
+                  <div>
+                    <dt>Role</dt>
+                    <dd>{f.caseStudy?.role}</dd>
+                  </div>
+                  <div>
+                    <dt>Stack</dt>
+                    <dd>{f.stack}</dd>
+                  </div>
+                </dl>
+                <span style={{ fontWeight: 600 }}>
+                  Read the case study <Arrow />
+                </span>
               </div>
-            </div>
-            <span className="play-dot" aria-hidden="true">
-              <PlayIcon />
-            </span>
-          </div>
-          <div className="featured__body">
-            <TagRow n="001" tags={["Web", "Agent"]} status="Live" />
-            <div>
-              <h3 className="disp featured__title">Reelstack</h3>
-              <p className="featured__blurb">
-                A social film &amp; TV watchlist with <span className="serif">Riley,</span> an AI agent that recommends,
-                explains and builds lists with you.
-              </p>
-            </div>
-            <dl className="dl">
-              <div>
-                <dt>Role</dt>
-                <dd>Design, frontend, backend, agent</dd>
-              </div>
-              <div>
-                <dt>Stack</dt>
-                <dd>Next.js · Postgres · Redis · MCP</dd>
-              </div>
-            </dl>
-            <span style={{ fontWeight: 600 }}>
-              Read the case study <Arrow />
-            </span>
-          </div>
-        </a>
+            </a>
+          );
+        })()}
 
         <div className="work-grid">
-          {PROJECTS.map((p) => (
-            <article className="card proj" data-reveal data-hover-video data-cursor="Play" key={p.name}>
-              <div className="proj__media" data-clip>
-                <ProjectMedia p={p} />
-              </div>
-              <div className="proj__body">
-                <TagRow n={p.n} tags={p.tags} status={p.status} />
-                <h3 className="disp proj__title">{p.name}</h3>
-                <p className="proj__blurb">{p.blurb}</p>
-                <p className="proj__stack">{p.stack}</p>
-              </div>
-            </article>
+          {PROJECTS.slice(1).map((p) => (
+            <ProjectCard p={p} key={p.slug} />
           ))}
         </div>
 
@@ -338,57 +373,57 @@ export default async function Page() {
               Not a demo. <span className="serif muted">A trace you can read.</span>
             </h2>
             <p className="muted" style={{ margin: 0, maxWidth: "44ch" }} data-reveal>
-              Every agent I build is instrumented from day one: each step, tool call, token and failure is logged, and
-              behaviour is checked against an eval set before it ships. This is a run of Son of Anton reviewing a pull
-              request.
+              Every agent I build logs each step and tool call, and is checked against real ground truth before it ships.
+              This is a real run: Son of Anton reviewing a pull request in security mode.
             </p>
             <ul className="checks" data-reveal>
               <li>
                 <span className="mono">01</span>Evals built from real ground truth, not vibes
               </li>
               <li>
-                <span className="mono">02</span>Cost and latency budgets per run
+                <span className="mono">02</span>Token budgets and a retry plan per run
               </li>
               <li>
                 <span className="mono">03</span>Guardrails and graceful failure paths
               </li>
             </ul>
+            <a className="u" href="/work/son-of-anton" style={{ alignSelf: "flex-start", fontWeight: 600 }}>
+              Read the Son of Anton case study <Arrow />
+            </a>
           </div>
           <figure className="trace" data-reveal>
             <figcaption>
               <span>
-                <span style={{ color: "var(--paper)" }}>son-of-anton</span> · run [RUN ID]
+                <span style={{ color: "var(--paper)" }}>son-of-anton</span> · @soa security
               </span>
-              <span>review PR [#NUMBER]</span>
+              <span>Dubjay18/soa-sandbox #1</span>
             </figcaption>
             <table>
               <thead>
                 <tr>
                   <th scope="col">Step</th>
                   <th scope="col">Detail</th>
-                  <th scope="col">ms</th>
-                  <th scope="col">tokens</th>
+                  <th scope="col">Result</th>
                 </tr>
               </thead>
               <tbody data-trace>
-                {TRACE_ROWS.map(([step, detail, ms, tok]) => (
+                {TRACE_ROWS.map(([step, detail, result]) => (
                   <tr key={step}>
                     <td>
                       <span className="accent">›</span> {step}
                     </td>
                     <td>{detail}</td>
-                    <td>{ms}</td>
-                    <td>{tok}</td>
+                    <td>{result}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <div className="trace__foot">
               <span>
-                Eval agreement <span className="accent">[X]%</span>
+                Verdict <span className="accent">risky</span>
               </span>
-              <span>Total [N] ms</span>
-              <span>Cost $[0.00X]</span>
+              <span>CWE-95 · CWE-798 · CWE-20</span>
+              <span>43/43 tests</span>
             </div>
           </figure>
         </div>

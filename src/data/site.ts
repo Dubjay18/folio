@@ -1,5 +1,4 @@
 // Single source of truth for the site's copy and links.
-// Anything in [BRACKETS] is a placeholder to fill before launch.
 
 export const SITE = {
   name: "Jay",
@@ -64,98 +63,21 @@ export const STATS = [
 
 export const CLIENTS = ["Grupp", "Sovalabs", "Throughline", "Gearsparks", "Cleverfolks", "Shippack"];
 
-type MediaKind =
-  | { kind: "browser"; url: string; video: string; webm?: string; placeholder: string }
-  | { kind: "phone"; video: string; placeholder: string }
-  | { kind: "term"; video: string; lines: [string, string][] };
-
-export type Project = {
-  n: string;
-  name: string;
-  tags: string[];
-  status: string;
-  blurb: string;
-  stack: string;
-  videoLabel: string;
-  media: MediaKind;
-};
-
-export const PROJECTS: Project[] = [
-  {
-    n: "002",
-    name: "Son of Anton",
-    tags: ["Agent"],
-    status: "Shipped",
-    blurb: "A pull-request review agent for the developers I mentor, graded against my own past review comments as ground truth.",
-    stack: "TypeScript · LLM tool use · eval harness",
-    videoLabel: "Son of Anton reviewing a pull request",
-    media: {
-      kind: "term",
-      video: "/videos/son-of-anton-loop.mp4",
-      lines: [
-        ["fetch_diff", "[N] files changed"],
-        ["recall", "past reviews on similar code"],
-        ["draft", "[N] comments"],
-        ["eval", "match vs ground truth"],
-      ],
-    },
-  },
-  {
-    n: "003",
-    name: "Deep Work",
-    tags: ["Mobile"],
-    status: "In build",
-    blurb: "An Android focus app: scheduled deep-work sessions, tiered app blocking, and a challenge you must solve to unlock a blocked app.",
-    stack: "React Native · TypeScript · Kotlin native module",
-    videoLabel: "Deep Work app: starting a focus session and blocking apps",
-    media: { kind: "phone", video: "/videos/deepwork-loop.mp4", placeholder: "[ deepwork-loop.mp4 ]" },
-  },
-  {
-    n: "004",
-    name: "Litt",
-    tags: ["Agent"],
-    status: "In build",
-    blurb: "A ledger-forensics agent that reasons over transaction ledgers and flags issues against Nigerian regulatory rules.",
-    stack: "ReAct agent · two-framework benchmark · Postgres",
-    videoLabel: "Litt auditing a ledger",
-    media: {
-      kind: "term",
-      video: "/videos/litt-loop.mp4",
-      lines: [
-        ["load_ledger", "[N] entries"],
-        ["reason", "imbalance in [ACCOUNT]"],
-        ["check_rule", "[REGULATION REF]"],
-        ["report", "[N] findings"],
-      ],
-    },
-  },
-  {
-    n: "005",
-    name: "Qraven",
-    tags: ["Backend"],
-    status: "Shipped",
-    blurb: "An event platform backend: auth with role-based access, event management, ticket issuance and payments wired to the ticket lifecycle.",
-    stack: "Go · Gin · PostgreSQL · Redis · Docker",
-    videoLabel: "Qraven in use",
-    media: { kind: "browser", url: "github.com/Dubjay18/QRaven", video: "/videos/qraven-loop.mp4", placeholder: "[ qraven-loop.mp4 · 16:10 ]" },
-  },
-];
-
 export const INDEX_ROWS = [
   ["Warden", "LLM gateway + observability", "Self-hosted · single binary · Next.js", "2026 · in build"],
-  ["Reverie", "Agent memory + dreaming engine", "Agent-agnostic library", "2026 · in build"],
   ["PrivateTM", "Private payments + prediction market", "Go · Chainlink CRE · Solidity · CCIP", "2026"],
   ["Specter", "Shadow traffic mirror + divergence analysis", "Go · consistent hashing · gossip", "2026"],
   ["Sanctum", "Encrypted TUI chat", "Go · NaCl · Bubble Tea", "2026"],
 ] as const;
 
+// A real Son of Anton run: `@soa security` on Dubjay18/soa-sandbox#1 (see lib/job.ts for the steps).
 export const TRACE_ROWS = [
-  ["receive", "webhook: PR opened", "[12]", "0"],
-  ["fetch_diff", "GitHub API · [N] files", "[340]", "0"],
-  ["retrieve", "[K] similar past reviews", "[85]", "[1.2k]"],
-  ["plan", "pick review focus areas", "[910]", "[2.4k]"],
-  ["comment", "[N] inline comments drafted", "[2,140]", "[5.8k]"],
-  ["guardrail", "tone + accuracy check", "[420]", "[900]"],
+  ["receive", "issue_comment webhook, signature verified", "202"],
+  ["acknowledge", "👀 reaction on the tag", "ok"],
+  ["fetch_diff", "discount.py · 1 file · +10 lines", "ok"],
+  ["budget", "lockfiles + build dirs skipped, lines numbered", "fits"],
+  ["gemini", "gemini-2.5-flash · security schema", "3 findings"],
+  ["post", "one native review, inline on changed lines", "risky"],
 ] as const;
 
 export const SERVICES = [
